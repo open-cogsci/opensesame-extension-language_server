@@ -1,0 +1,20 @@
+{
+    "version": "0.1.0",
+    "label": "Find in project files",
+    "tooltip": "Find text in project files",
+    "shortcut": "Ctrl+Shift+F",
+    "icon": "edit-find",
+    "menu": {
+        "index": 0,
+        "submenu": "Edit"
+    },
+    "settings": {
+        "lsp_enable_r": true,
+        "lsp_enable_css": true,
+        "lsp_enable_python": true,
+        "lsp_diagnostics": true,
+        "lsp_calltips": true,
+        "lsp_code_completion": true
+    },
+    "modes": ["ide"]
+}
