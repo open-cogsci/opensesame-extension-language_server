@@ -31,6 +31,8 @@ _ = translation_context('LanguageServer', category=u'extension')
 
 
 class LanguageServer(BaseExtension):
+    
+    preferences_ui = 'extensions.LanguageServer.preferences'
 
     def event_startup(self):
 
