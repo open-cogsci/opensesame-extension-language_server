@@ -19,33 +19,79 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 
 from libopensesame.py3compat import *
 import sys
+from pyqode.qt.QtCore import Signal
 from libqtopensesame.misc.config import cfg
 from pyqode_extras.widgets import FallbackCodeEdit
-from pyqode.core import api, modes, panels
+from pyqode.core import modes, panels
 from pyqode.language_server.backend import server, workers
 from pyqode.language_server import modes as lsp_modes
 
 
 class LanguageServerMixin(object):
     
+    server_status_changed = Signal(str, str, int)
     mimetypes = None  # Specified in subclasses
     language_server_command = None
     language_identifier = None
     language = None
     
+    def _disable_mode(self, mode):
+        
+        if mode not in self.modes.keys():
+            return
+        self.modes.remove(mode)
+        
+    def _disable_panel(self, panel):
+        
+        for position in self.panels.keys():
+            if panel in self.panels._panels[position]:
+                break
+        else:
+            return
+        self.panels.remove(panel)
+    
+    def _enable_mode(self, mode):
+        
+        if mode.name in self.modes.keys():
+            return
+        self.modes.append(mode)
+    
+    def _enable_panel(self, panel, position):
+        
+        for position in self.panels.keys():
+            if panel.name in self.panels._panels[position]:
+                return
+        self.panels.append(panel, position)
+    
     def _enable_lsp_modes(self):
         
         if cfg.lsp_code_completion:
-            self.modes.append(modes.CodeCompletionMode())
+            self._enable_mode(modes.CodeCompletionMode())
         if cfg.lsp_calltips:
-            self.modes.append(lsp_modes.CalltipsMode())
+            self._enable_mode(lsp_modes.CalltipsMode())
         if cfg.lsp_diagnostics:
-            self.modes.append(lsp_modes.DiagnosticsMode())
-            self.panels.append(panels.CheckerPanel())
-            self.panels.append(
+            diagnostics_mode = lsp_modes.DiagnosticsMode()
+            diagnostics_mode.set_ignore_rules(
+                [
+                    ir.strip()
+                    for ir in cfg.lsp_diagnostics_ignore.split(u';')
+                    if ir.strip()
+                ]
+            )
+            diagnostics_mode.server_status_changed.connect(
+                self._on_server_status_changed
+            )
+            self._enable_mode(diagnostics_mode)
+            self._enable_panel(
+                panels.CheckerPanel(),
+                panels.GlobalCheckerPanel.Position.LEFT
+            )
+            self._enable_panel(
                 panels.GlobalCheckerPanel(),
                 panels.GlobalCheckerPanel.Position.RIGHT
             )
+        if cfg.lsp_symbols:
+            self._enable_mode(lsp_modes.SymbolsMode())
 
     def _start_backend(self):
         
@@ -59,7 +105,15 @@ class LanguageServerMixin(object):
             reuse=True,
             share_id=self.language_server_command
         )
-
+        
+    def _on_server_status_changed(self, status):
+        
+        self.server_status_changed.emit(
+            self.language_identifier,
+            self.language_server_command,
+            status
+        )
+        
     def setPlainText(self, *args, **kwargs):
         
         super().setPlainText(*args, **kwargs)

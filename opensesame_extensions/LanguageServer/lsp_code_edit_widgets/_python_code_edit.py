@@ -18,6 +18,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
+from libqtopensesame.misc.config import cfg
 from lsp_code_edit_widgets  import LanguageServerMixin
 from pyqode_extras.widgets import PythonCodeEdit as OriginalPythonCodeEdit
 
@@ -37,13 +38,15 @@ class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
         
     def _disable_original_modes(self):
         
+        if not cfg.lsp_code_completion:
+            self._disable_mode('CodeCompletionMode')
+        if not cfg.lsp_diagnostics:
+            self._disable_panel('CheckerPanel')
+            self._disable_panel('GlobalCheckerPanel')
         for mode in (
-            'CodeCompletionMode',
             'PyAutoCompleteMode',
             'CalltipsMode',
             'PyFlakesChecker',
             'PEP8CheckerMode',
-            'GlobalCheckerPanel'
         ):
-            if mode in self.modes.keys():
-                self.modes.remove(mode)
+            self._disable_mode(mode)

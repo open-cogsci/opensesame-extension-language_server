@@ -13,8 +13,11 @@
         "lsp_enable_css": true,
         "lsp_enable_python": true,
         "lsp_diagnostics": true,
+        "lsp_diagnostics_ignore": "",
         "lsp_calltips": true,
-        "lsp_code_completion": true
+        "lsp_code_completion": true,
+        "lsp_symbols": true,
+        "lsp_symbols_kind": "Class;Function;Method"
     },
     "modes": ["ide"]
 }
