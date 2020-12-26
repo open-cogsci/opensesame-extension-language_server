@@ -58,8 +58,8 @@ class LanguageServerMixin(object):
     
     def _enable_panel(self, panel, position):
         
-        for position in self.panels.keys():
-            if panel.name in self.panels._panels[position]:
+        for p in self.panels.keys():
+            if panel.name in self.panels._panels[p]:
                 return
         self.panels.append(panel, position)
     
