@@ -19,7 +19,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 
 from libopensesame.py3compat import *
 from libqtopensesame.misc.config import cfg
-from lsp_code_edit_widgets  import LanguageServerMixin
+from lsp_code_edit_widgets import LanguageServerMixin
 from pyqode_extras.widgets import PythonCodeEdit as OriginalPythonCodeEdit
 
 

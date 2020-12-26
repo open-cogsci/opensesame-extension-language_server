@@ -18,7 +18,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
-from lsp_code_edit_widgets  import LanguageServerCodeEdit
+from lsp_code_edit_widgets import LanguageServerCodeEdit
 
 
 class CSSCodeEdit(LanguageServerCodeEdit):
