@@ -126,7 +126,7 @@ class LanguageServerMixin(object):
         
         super().setPlainText(*args, **kwargs)
         self.backend.send_request(
-            workers.open_document,
+            workers.run_diagnostics,
             {
                 'code': self.toPlainText().replace(u'\u2029', u'\n'),
                 'path': self.file.path,
