@@ -18,11 +18,21 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
-from ._language_server_code_edit import (
-    LanguageServerCodeEdit,
-    LanguageServerMixin
-)
-from ._css_code_edit import CSSCodeEdit
-from ._r_code_edit import RCodeEdit
-from ._python_code_edit import PythonCodeEdit
-from ._typescript_code_edit import TypeScriptCodeEdit
+from lsp_code_edit_widgets import LanguageServerCodeEdit
+
+
+class TypeScriptCodeEdit(LanguageServerCodeEdit):
+    
+    mimetypes = [
+        'application/javascript',
+        'application/x-javascript',
+        'application/typescript',
+        'application/x-typescript',
+        'text/javascript',
+        'text/x-javascript',
+        'text/typescript',
+        'text/x-typescript'
+    ]
+    language_server_command = 'typescript-language-server --stdio'
+    language_identifier = 'typescript'
+    language = 'typescript'

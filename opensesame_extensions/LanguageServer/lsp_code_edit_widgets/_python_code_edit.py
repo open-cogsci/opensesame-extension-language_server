@@ -44,7 +44,6 @@ class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
             self._disable_panel('CheckerPanel')
             self._disable_panel('GlobalCheckerPanel')
         for mode in (
-            'PyAutoCompleteMode',
             'CalltipsMode',
             'PyFlakesChecker',
             'PEP8CheckerMode',

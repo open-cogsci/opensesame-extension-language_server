@@ -29,7 +29,7 @@ from pyqode.language_server import modes as lsp_modes
 
 class LanguageServerMixin(object):
     
-    server_status_changed = Signal(str, str, int)
+    server_status_changed = Signal(str, str, int, int)
     mimetypes = None  # Specified in subclasses
     language_server_command = None
     language_identifier = None
@@ -100,18 +100,26 @@ class LanguageServerMixin(object):
             sys.executable,
             [
                 '--command', self.language_server_command,
-                '--langid', self.language_identifier
-            ],
+                '--langid', self.language_identifier,
+            ] + self.extension_manager.provide('ide_project_folders'),
             reuse=True,
             share_id=self.language_server_command
         )
         
-    def _on_server_status_changed(self, status):
+    def _on_server_status_changed(self, status, pid):
         
         self.server_status_changed.emit(
             self.language_identifier,
             self.language_server_command,
-            status
+            status,
+            pid
+        )
+        
+    def change_project_folders(self, folders):
+        
+        self.backend.send_request(
+            workers.change_project_folders,
+            {'folders': folders}
         )
         
     def setPlainText(self, *args, **kwargs):

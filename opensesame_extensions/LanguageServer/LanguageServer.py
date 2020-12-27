@@ -38,21 +38,36 @@ class LanguageServer(BaseExtension):
 
         if cfg.lsp_enable_r:
             from lsp_code_edit_widgets import RCodeEdit
+            RCodeEdit.extension_manager = self.extension_manager
             SplittableCodeEditTabWidget.register_code_edit(RCodeEdit)
         if cfg.lsp_enable_css:
             from lsp_code_edit_widgets import CSSCodeEdit
+            CSSCodeEdit.extension_manager = self.extension_manager
             SplittableCodeEditTabWidget.register_code_edit(CSSCodeEdit)
         if cfg.lsp_enable_python:
             from lsp_code_edit_widgets import PythonCodeEdit
+            PythonCodeEdit.extension_manager = self.extension_manager
             SplittableCodeEditTabWidget.register_code_edit(PythonCodeEdit)
+        if cfg.lsp_enable_typescript:
+            from lsp_code_edit_widgets import TypeScriptCodeEdit
+            TypeScriptCodeEdit.extension_manager = self.extension_manager
+            SplittableCodeEditTabWidget.register_code_edit(TypeScriptCodeEdit)
 
-    def _on_server_status_changed(self, langid, cmd, status):
+    def _on_server_status_changed(self, langid, cmd, status, pid):
         
-        if status == SERVER_RUNNING:
+        if (
+            status == SERVER_RUNNING and
+            pid not in self.extension_manager.provide('subprocess_pids')
+        ):
             self.extension_manager.fire(
                 'notify',
                 message='{} language server started'.format(langid),
                 category='info'
+            )
+            self.extension_manager.fire(
+                'register_subprocess',
+                pid=pid,
+                description=cmd
             )
         elif status == SERVER_NOT_STARTED:
             self.extension_manager.fire(
@@ -76,3 +91,9 @@ class LanguageServer(BaseExtension):
             editor.server_status_changed.connect(
                 self._on_server_status_changed
             )
+
+    def event_ide_project_folders_changed(self, folders):
+        
+        for editor in self.extension_manager.provide('ide_editors'):
+            if hasattr(editor, 'change_project_folders'):
+                editor.change_project_folders(folders)
