@@ -27,7 +27,6 @@ class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
 
     mimetypes = ['text/x-python']
     language_server_command = 'pyls'
-    language_identifier = 'python'
     language = 'python'
 
     def __init__(self, parent):

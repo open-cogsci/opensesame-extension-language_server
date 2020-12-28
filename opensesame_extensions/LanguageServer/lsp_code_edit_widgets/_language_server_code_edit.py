@@ -29,11 +29,31 @@ from pyqode.language_server import modes as lsp_modes
 
 class LanguageServerMixin(object):
     
-    server_status_changed = Signal(str, str, int, int)
+    """A base class for code edits that support language serves. The reason for
+    using a mixin rather than subclassing a CodeEdit directly (as below) is to
+    allow this functionality to different kinds of CodeEdit widgets.
+    """
+    
     mimetypes = None  # Specified in subclasses
-    language_server_command = None
-    language_identifier = None
-    language = None
+    language_server_command = None  # Specified in subclass
+    language = None  # Specified in subclass
+    server_status_changed = Signal(str, str, int, int)
+    
+    @property
+    def language_server_pid(self):
+        
+        try:
+            return self._language_server_pid
+        except AttributeError:
+            return None
+    
+    @property
+    def language_server_status(self):
+        
+        try:
+            return self._language_server_status
+        except AttributeError:
+            return workers.SERVER_NOT_STARTED
     
     def _disable_mode(self, mode):
         
@@ -100,7 +120,7 @@ class LanguageServerMixin(object):
             sys.executable,
             [
                 '--command', self.language_server_command,
-                '--langid', self.language_identifier,
+                '--langid', self.language,
             ] + self.extension_manager.provide('ide_project_folders'),
             reuse=True,
             share_id=self.language_server_command
@@ -109,11 +129,13 @@ class LanguageServerMixin(object):
     def _on_server_status_changed(self, status, pid):
         
         self.server_status_changed.emit(
-            self.language_identifier,
+            self.language,
             self.language_server_command,
             status,
             pid
         )
+        self._language_server_pid = pid
+        self._language_server_status = status
         
     def change_project_folders(self, folders):
         
@@ -127,10 +149,7 @@ class LanguageServerMixin(object):
         super().setPlainText(*args, **kwargs)
         self.backend.send_request(
             workers.run_diagnostics,
-            {
-                'code': self.toPlainText().replace(u'\u2029', u'\n'),
-                'path': self.file.path,
-            }
+            {'code': self._text(), 'path': self.file.path}
         )
 
     def __repr__(self):
@@ -140,6 +159,18 @@ class LanguageServerMixin(object):
     def clone(self):
 
         return self.__class__(parent=self.parent())
+        
+    def close(self, clear=True):
+
+        self.backend.send_request(
+            workers.close_document,
+            {'code': self._text(), 'path': self.file.path}
+        )
+        super().close(clear=True)
+        
+    def _text(self):
+        
+        return self.toPlainText().replace(u'\u2029', u'\n')
 
 
 class LanguageServerCodeEdit(LanguageServerMixin, FallbackCodeEdit):

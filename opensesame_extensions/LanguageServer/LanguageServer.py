@@ -94,6 +94,12 @@ class LanguageServer(BaseExtension):
 
     def event_ide_project_folders_changed(self, folders):
         
+        pids = []
         for editor in self.extension_manager.provide('ide_editors'):
-            if hasattr(editor, 'change_project_folders'):
-                editor.change_project_folders(folders)
+            if not hasattr(editor, 'change_project_folders'):
+                continue
+            pid = editor.language_server_pid
+            if pid in pids:
+                continue
+            editor.change_project_folders(folders)
+            pids.append(pid)

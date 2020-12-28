@@ -34,5 +34,4 @@ class TypeScriptCodeEdit(LanguageServerCodeEdit):
         'text/x-typescript'
     ]
     language_server_command = 'typescript-language-server --stdio'
-    language_identifier = 'typescript'
     language = 'typescript'

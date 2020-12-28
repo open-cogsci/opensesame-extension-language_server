@@ -25,7 +25,6 @@ class RCodeEdit(LanguageServerCodeEdit):
     
     mimetypes = ['text/x-r', 'text/x-R']
     language_server_command = 'R --slave -e "languageserver::run()"'
-    language_identifier = 'r'
     language = 'R'
 
     def __init__(self, *args, **kwargs):

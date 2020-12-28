@@ -25,7 +25,6 @@ class CSSCodeEdit(LanguageServerCodeEdit):
     
     mimetypes = ['text/css']
     language_server_command = 'css-languageserver --stdio'
-    language_identifier = 'css'
     language = 'css'
 
     def __init__(self, *args, **kwargs):
