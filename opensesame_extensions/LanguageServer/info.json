@@ -1,9 +1,10 @@
 {
-    "version": "0.1.0",
+    "version": "0.1.2",
     "label": "Find in project files",
     "tooltip": "Find text in project files",
     "shortcut": "Ctrl+Shift+F",
     "icon": "edit-find",
+    "priority": 99,
     "menu": {
         "index": 0,
         "submenu": "Edit"
