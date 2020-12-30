@@ -78,7 +78,11 @@ class LanguageServer(BaseExtension):
         elif status == SERVER_ERROR:
             self.extension_manager.fire(
                 'notify',
-                message='failed to start {} language server ({})'.format(
+                message=(
+                    'Failed to start {} language server ({}). Visit '
+                    'https://rapunzel.cogsci.nl/language-server for '
+                    'instructions.'
+                ).format(
                     langid,
                     cmd
                 ),

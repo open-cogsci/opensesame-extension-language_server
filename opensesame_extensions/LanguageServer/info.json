@@ -1,5 +1,5 @@
 {
-    "version": "0.1.2",
+    "version": "0.1.3",
     "label": "Find in project files",
     "tooltip": "Find text in project files",
     "shortcut": "Ctrl+Shift+F",
