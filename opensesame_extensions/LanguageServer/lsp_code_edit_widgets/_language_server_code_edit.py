@@ -89,19 +89,24 @@ class LanguageServerMixin(object):
             self._enable_mode(modes.CodeCompletionMode())
         if cfg.lsp_calltips:
             self._enable_mode(lsp_modes.CalltipsMode())
+        # The diagnostics mode also does some bookkeeping that is generally
+        # required for LSP support. Therefore it's always installed, but only
+        # shows the actual diagnostics if the show_diagnostics keyword is True.
+        diagnostics_mode = lsp_modes.DiagnosticsMode(
+            show_diagnostics=cfg.lsp_diagnostics
+        )
+        diagnostics_mode.set_ignore_rules(
+            [
+                ir.strip()
+                for ir in cfg.lsp_diagnostics_ignore.split(u';')
+                if ir.strip()
+            ]
+        )
+        diagnostics_mode.server_status_changed.connect(
+            self._on_server_status_changed
+        )
+        self._enable_mode(diagnostics_mode)
         if cfg.lsp_diagnostics:
-            diagnostics_mode = lsp_modes.DiagnosticsMode()
-            diagnostics_mode.set_ignore_rules(
-                [
-                    ir.strip()
-                    for ir in cfg.lsp_diagnostics_ignore.split(u';')
-                    if ir.strip()
-                ]
-            )
-            diagnostics_mode.server_status_changed.connect(
-                self._on_server_status_changed
-            )
-            self._enable_mode(diagnostics_mode)
             self._enable_panel(
                 panels.CheckerPanel(),
                 panels.GlobalCheckerPanel.Position.LEFT
