@@ -37,7 +37,7 @@ class LanguageServerMixin(object):
     mimetypes = None  # Specified in subclasses
     language_server_command = None  # Specified in subclass
     language = None  # Specified in subclass
-    server_status_changed = Signal(str, str, int, int)
+    server_status_changed = Signal(str, str, int, int, dict)
     
     @property
     def language_server_pid(self):
@@ -126,16 +126,18 @@ class LanguageServerMixin(object):
             share_id=self.language_server_command
         )
         
-    def _on_server_status_changed(self, status, pid):
+    def _on_server_status_changed(self, status, pid, capabilities):
         
         self.server_status_changed.emit(
             self.language,
             self.language_server_command,
             status,
-            pid
+            pid,
+            capabilities
         )
         self._language_server_pid = pid
         self._language_server_status = status
+        self._language_server_capabilities = capabilities
         
     def change_project_folders(self, folders):
         

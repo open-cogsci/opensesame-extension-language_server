@@ -67,7 +67,14 @@ class LanguageServer(BaseExtension):
             cls.extension_manager = self.extension_manager
             SplittableCodeEditTabWidget.register_code_edit(cls)
             
-    def _on_server_status_changed(self, langid, cmd, status, pid):
+    def _on_server_status_changed(
+        self,
+        langid,
+        cmd,
+        status,
+        pid,
+        capabilities
+    ):
         
         if (
             status == SERVER_RUNNING and
