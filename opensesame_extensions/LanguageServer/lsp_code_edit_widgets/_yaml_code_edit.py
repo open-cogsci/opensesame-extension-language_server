@@ -17,9 +17,23 @@ You should have received a copy of the GNU General Public License
 along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from ._css_code_edit import CSSCodeEdit
-from ._r_code_edit import RCodeEdit
-from ._python_code_edit import PythonCodeEdit
-from ._typescript_code_edit import TypeScriptCodeEdit
-from ._json_code_edit import JSONCodeEdit
-from ._yaml_code_edit import YAMLCodeEdit
+from libopensesame.py3compat import *
+import mimetypes
+from lsp_code_edit_widgets._language_server_code_edit import \
+    LanguageServerCodeEdit
+
+
+class YAMLCodeEdit(LanguageServerCodeEdit):
+    """https://github.com/redhat-developer/yaml-language-server"""
+    
+    mimetypes = [
+        'application/yaml',
+        'application/x-yaml',
+        'text/yaml',
+        'text/x-yaml',
+    ]
+    language_server_command = 'yaml-language-server --stdio'
+    language = 'yaml'
+
+
+mimetypes.add_type('application/yaml', '.yaml', strict=True)

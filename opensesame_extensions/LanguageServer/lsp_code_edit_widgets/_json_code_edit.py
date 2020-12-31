@@ -17,9 +17,19 @@ You should have received a copy of the GNU General Public License
 along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from ._css_code_edit import CSSCodeEdit
-from ._r_code_edit import RCodeEdit
-from ._python_code_edit import PythonCodeEdit
-from ._typescript_code_edit import TypeScriptCodeEdit
-from ._json_code_edit import JSONCodeEdit
-from ._yaml_code_edit import YAMLCodeEdit
+from libopensesame.py3compat import *
+from lsp_code_edit_widgets._language_server_code_edit import \
+    LanguageServerCodeEdit
+
+
+class JSONCodeEdit(LanguageServerCodeEdit):
+    """https://www.npmjs.com/package/vscode-json-languageserver"""
+    
+    mimetypes = [
+        'application/json',
+        'application/x-json',
+        'text/json',
+        'text/x-json',
+    ]
+    language_server_command = 'vscode-json-languageserver --stdio'
+    language = 'json'

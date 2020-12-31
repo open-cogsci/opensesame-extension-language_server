@@ -18,6 +18,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
+from libopensesame.oslogging import oslogger
 from libqtopensesame.misc.config import cfg
 from pyqode.language_server.backend.workers import (
     SERVER_ERROR,
@@ -27,6 +28,8 @@ from pyqode.language_server.backend.workers import (
 from pyqode.core.widgets import SplittableCodeEditTabWidget
 from libqtopensesame.extensions import BaseExtension
 from libqtopensesame.misc.translate import translation_context
+from pyqode.core.api import CodeEdit
+import lsp_code_edit_widgets
 _ = translation_context('LanguageServer', category=u'extension')
 
 
@@ -36,23 +39,34 @@ class LanguageServer(BaseExtension):
 
     def event_startup(self):
 
-        if cfg.lsp_enable_r:
-            from lsp_code_edit_widgets import RCodeEdit
-            RCodeEdit.extension_manager = self.extension_manager
-            SplittableCodeEditTabWidget.register_code_edit(RCodeEdit)
-        if cfg.lsp_enable_css:
-            from lsp_code_edit_widgets import CSSCodeEdit
-            CSSCodeEdit.extension_manager = self.extension_manager
-            SplittableCodeEditTabWidget.register_code_edit(CSSCodeEdit)
-        if cfg.lsp_enable_python:
-            from lsp_code_edit_widgets import PythonCodeEdit
-            PythonCodeEdit.extension_manager = self.extension_manager
-            SplittableCodeEditTabWidget.register_code_edit(PythonCodeEdit)
-        if cfg.lsp_enable_typescript:
-            from lsp_code_edit_widgets import TypeScriptCodeEdit
-            TypeScriptCodeEdit.extension_manager = self.extension_manager
-            SplittableCodeEditTabWidget.register_code_edit(TypeScriptCodeEdit)
-
+        # Loop through all code edit classes that are bundles with the
+        # extension and register them if they're enabled in the configuration.
+        for key in dir(lsp_code_edit_widgets):
+            cls = getattr(lsp_code_edit_widgets, key)
+            # Check if it's a code edit class
+            if not isinstance(cls, type) or not issubclass(cls, CodeEdit):
+                continue
+            # Check if the language server is configured and enabled
+            try:
+                enabled = cfg['lsp_enable_{}'.format(cls.language.lower())]
+            except BaseException:
+                oslogger.warning(
+                    '{} language server is missing in config'.format(
+                        cls.language
+                    )
+                )
+                continue
+            if not enabled:
+                oslogger.debug(
+                    '{} language server is disabled in config'.format(
+                        cls.language
+                    )
+                )
+                continue
+            oslogger.debug('{} language server enabled'.format(cls.language))
+            cls.extension_manager = self.extension_manager
+            SplittableCodeEditTabWidget.register_code_edit(cls)
+            
     def _on_server_status_changed(self, langid, cmd, status, pid):
         
         if (

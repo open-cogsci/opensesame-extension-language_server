@@ -19,11 +19,13 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 
 from libopensesame.py3compat import *
 from libqtopensesame.misc.config import cfg
-from lsp_code_edit_widgets import LanguageServerMixin
+from lsp_code_edit_widgets._language_server_code_edit import \
+    LanguageServerMixin
 from pyqode_extras.widgets import PythonCodeEdit as OriginalPythonCodeEdit
 
 
 class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
+    """https://github.com/palantir/python-language-server"""
 
     mimetypes = ['text/x-python']
     language_server_command = 'pyls'
