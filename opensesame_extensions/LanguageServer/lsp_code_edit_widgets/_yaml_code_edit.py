@@ -37,3 +37,4 @@ class YAMLCodeEdit(LanguageServerCodeEdit):
 
 
 mimetypes.add_type('application/yaml', '.yaml', strict=True)
+mimetypes.add_type('application/yaml', '.yml', strict=True)
