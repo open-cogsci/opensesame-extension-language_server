@@ -116,7 +116,13 @@ class LanguageServerMixin(object):
                 panels.GlobalCheckerPanel.Position.RIGHT
             )
         if cfg.lsp_symbols:
-            self._enable_mode(lsp_modes.SymbolsMode())
+            self._enable_mode(
+                lsp_modes.SymbolsMode(
+                    cfg.lsp_symbols_kind.split(';')
+                    if isinstance(cfg.lsp_symbols_kind, basestring)
+                    else []
+                )
+            )
 
     def _start_backend(self):
         
