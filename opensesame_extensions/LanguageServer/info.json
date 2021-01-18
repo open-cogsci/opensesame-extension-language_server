@@ -1,5 +1,5 @@
 {
-    "version": "0.1.7",
+    "version": "0.1.8",
     "label": "Find in project files",
     "tooltip": "Find text in project files",
     "shortcut": "Ctrl+Shift+F",
@@ -12,7 +12,7 @@
     "settings": {
         "lsp_enable_r": true,
         "lsp_enable_css": true,
-        "lsp_enable_python": true,
+        "lsp_enable_python": false,
         "lsp_enable_typescript": true,
         "lsp_enable_json": true,
         "lsp_enable_yaml": true,
