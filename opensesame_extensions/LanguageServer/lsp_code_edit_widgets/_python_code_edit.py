@@ -24,7 +24,7 @@ from lsp_code_edit_widgets._language_server_code_edit import \
 from pyqode_extras.widgets import PythonCodeEdit as OriginalPythonCodeEdit
 
 
-class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
+class PylsCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
     """https://github.com/palantir/python-language-server"""
 
     mimetypes = ['text/x-python']
@@ -50,3 +50,13 @@ class PythonCodeEdit(LanguageServerMixin, OriginalPythonCodeEdit):
             'PEP8CheckerMode',
         ):
             self._disable_mode(mode)
+            
+
+class JediCodeEdit(PylsCodeEdit):
+    """https://github.com/palantir/python-language-server"""
+
+    language_server_command = 'jedi-language-server'
+    supports_workspace_folders = False
+
+
+PythonCodeEdit = PylsCodeEdit
