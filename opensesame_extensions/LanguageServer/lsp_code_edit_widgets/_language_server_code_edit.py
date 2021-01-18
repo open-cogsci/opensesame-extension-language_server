@@ -37,6 +37,11 @@ class LanguageServerMixin(object):
     mimetypes = None  # Specified in subclasses
     language_server_command = None  # Specified in subclass
     language = None  # Specified in subclass
+    supports_workspace_folders = True
+    supports_calltips = True
+    supports_completions = True
+    supports_diagnostics = True
+    supports_symbols = True
     server_status_changed = Signal(str, str, int, int, dict)
     
     @property
@@ -85,15 +90,15 @@ class LanguageServerMixin(object):
     
     def _enable_lsp_modes(self):
         
-        if cfg.lsp_code_completion:
+        if cfg.lsp_code_completion and self.supports_completions:
             self._enable_mode(modes.CodeCompletionMode())
-        if cfg.lsp_calltips:
+        if cfg.lsp_calltips and self.supports_calltips:
             self._enable_mode(lsp_modes.CalltipsMode())
         # The diagnostics mode also does some bookkeeping that is generally
         # required for LSP support. Therefore it's always installed, but only
         # shows the actual diagnostics if the show_diagnostics keyword is True.
         diagnostics_mode = lsp_modes.DiagnosticsMode(
-            show_diagnostics=cfg.lsp_diagnostics
+            show_diagnostics=cfg.lsp_diagnostics and self.supports_diagnostics
         )
         diagnostics_mode.set_ignore_rules(
             [
@@ -106,7 +111,7 @@ class LanguageServerMixin(object):
             self._on_server_status_changed
         )
         self._enable_mode(diagnostics_mode)
-        if cfg.lsp_diagnostics:
+        if cfg.lsp_diagnostics and self.supports_diagnostics:
             self._enable_panel(
                 panels.CheckerPanel(),
                 panels.GlobalCheckerPanel.Position.LEFT
@@ -115,7 +120,7 @@ class LanguageServerMixin(object):
                 panels.GlobalCheckerPanel(),
                 panels.GlobalCheckerPanel.Position.RIGHT
             )
-        if cfg.lsp_symbols:
+        if cfg.lsp_symbols and self.supports_symbols:
             self._enable_mode(
                 lsp_modes.SymbolsMode(
                     cfg.lsp_symbols_kind.split(';')
@@ -126,13 +131,17 @@ class LanguageServerMixin(object):
 
     def _start_backend(self):
         
+        args = [
+            '--command', self.language_server_command,
+            '--langid', self.language,
+        ]
+        if self.supports_workspace_folders:
+            args += ['--project-folders'] + \
+                self.extension_manager.provide('ide_project_folders')
         self.backend.start(
             server.__file__,
             sys.executable,
-            [
-                '--command', self.language_server_command,
-                '--langid', self.language,
-            ] + self.extension_manager.provide('ide_project_folders'),
+            args,
             reuse=True,
             share_id=self.language_server_command
         )
