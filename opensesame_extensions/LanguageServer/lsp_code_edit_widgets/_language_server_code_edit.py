@@ -80,6 +80,16 @@ class LanguageServerMixin(object):
         if mode.name in self.modes.keys():
             return
         self.modes.append(mode)
+        
+    def _move_mode_to_end(self, mode_name):
+        """Moves a mode to the end by disabling and then enabling it. The main
+        reason for doing this is to have this mode process key events last.
+        """
+        if mode_name not in self.modes.keys():
+            return
+        mode = self.modes.get(mode_name)
+        mode.enabled = False
+        mode.enabled = True
     
     def _enable_panel(self, panel, position):
         
@@ -92,6 +102,11 @@ class LanguageServerMixin(object):
         
         if cfg.lsp_code_completion and self.supports_completions:
             self._enable_mode(modes.CodeCompletionMode())
+            self._enable_mode(modes.AutoCompleteMode())
+            # These modes consume key presses that are used by the completion
+            # modes, and should therefore be moved to the end.
+            self._move_mode_to_end('AutoIndentMode')
+            self._move_mode_to_end('SmartBackSpaceMode')
         if cfg.lsp_calltips and self.supports_calltips:
             self._enable_mode(lsp_modes.CalltipsMode())
         # The diagnostics mode also does some bookkeeping that is generally
