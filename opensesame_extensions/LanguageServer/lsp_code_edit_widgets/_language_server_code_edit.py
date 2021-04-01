@@ -18,6 +18,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
+import os
 import sys
 from pyqode.qt.QtCore import Signal
 from libqtopensesame.misc.config import cfg
@@ -151,8 +152,12 @@ class LanguageServerMixin(object):
             '--langid', self.language,
         ]
         if self.supports_workspace_folders:
-            args += ['--project-folders'] + \
-                self.extension_manager.provide('ide_project_folders')
+            project_folders = self.extension_manager.provide(
+                'ide_project_folders'
+            )
+            if not project_folders:
+                project_folders = [os.getcwd()]
+            args += ['--project-folders'] + project_folders
         self.backend.start(
             server.__file__,
             sys.executable,
