@@ -1,5 +1,5 @@
 {
-    "version": "0.1.9",
+    "version": "0.1.10",
     "label": "Find in project files",
     "tooltip": "Find text in project files",
     "shortcut": "Ctrl+Shift+F",
@@ -23,5 +23,5 @@
         "lsp_symbols": true,
         "lsp_symbols_kind": "Class;Function;Method"
     },
-    "modes": ["ide"]
+    "modes": ["ide", "default"]
 }
