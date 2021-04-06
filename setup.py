@@ -34,10 +34,20 @@ def data_files():
     ]
 
 
+def get_readme():
+
+    if os.path.exists('readme.md'):
+        with open('readme.md') as fd:
+            return fd.read()
+    return 'No readme information'
+
+
 setup(
     name="opensesame-extension-language_server",
     version=version,
     description="Adds language-server support to OpenSesame and Rapunzel",
+    long_description=get_readme(),
+    long_description_content_type='text/markdown',
     author="Sebastiaan Mathot",
     author_email="s.mathot@cogsci.nl",
     url='https://github.com/open-cogsci/opensesame-extension-language_server',
