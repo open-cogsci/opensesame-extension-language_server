@@ -1,14 +1,6 @@
 {
-    "version": "0.1.10",
-    "label": "Find in project files",
-    "tooltip": "Find text in project files",
-    "shortcut": "Ctrl+Shift+F",
-    "icon": "edit-find",
-    "priority": 99,
-    "menu": {
-        "index": 0,
-        "submenu": "Edit"
-    },
+    "version": "0.1.11",
+    "label": "Support for language server protocol (LSP)",
     "settings": {
         "lsp_enable_r": true,
         "lsp_enable_css": true,
@@ -17,7 +9,10 @@
         "lsp_enable_json": true,
         "lsp_enable_yaml": true,
         "lsp_diagnostics": true,
-        "lsp_diagnostics_ignore": "",
+        "lsp_diagnostics_ignore": {
+            "ide": "",
+            "default": "Cannot find name 'vars'"
+        },
         "lsp_calltips": true,
         "lsp_code_completion": true,
         "lsp_symbols": true,
