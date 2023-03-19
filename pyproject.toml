@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "opensesame-extension-language_server"
-version = "0.2.0"
+version = "0.2.1"
 description = "Adds language-server support to OpenSesame and Rapunzel"
 authors = ["Sebastiaan Mathôt <s.mathot@cogsci.nl>"]
 readme = "readme.md"
