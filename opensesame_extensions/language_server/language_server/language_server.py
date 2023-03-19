@@ -29,7 +29,7 @@ from pyqode.core.widgets import SplittableCodeEditTabWidget
 from libqtopensesame.extensions import BaseExtension
 from libqtopensesame.misc.translate import translation_context
 from pyqode.core.api import CodeEdit
-import lsp_code_edit_widgets
+from . import lsp_code_edit_widgets
 _ = translation_context('LanguageServer', category=u'extension')
 
 

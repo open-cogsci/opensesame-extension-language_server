@@ -18,18 +18,23 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
-from lsp_code_edit_widgets._language_server_code_edit import \
+import mimetypes
+from ._language_server_code_edit import \
     LanguageServerCodeEdit
 
 
-class CSSCodeEdit(LanguageServerCodeEdit):
-    """https://github.com/vscode-langservers/vscode-css-languageserver-bin"""
+class YAMLCodeEdit(LanguageServerCodeEdit):
+    """https://github.com/redhat-developer/yaml-language-server"""
     
-    mimetypes = ['text/css']
-    language_server_command = 'css-languageserver --stdio'
-    language = 'css'
+    mimetypes = [
+        'application/yaml',
+        'application/x-yaml',
+        'text/yaml',
+        'text/x-yaml',
+    ]
+    language_server_command = 'yaml-language-server --stdio'
+    language = 'yaml'
 
-    def __init__(self, *args, **kwargs):
-        
-        super().__init__(*args, **kwargs)
-        self._word_separators.remove('-')
+
+mimetypes.add_type('application/yaml', '.yaml', strict=True)
+mimetypes.add_type('application/yaml', '.yml', strict=True)

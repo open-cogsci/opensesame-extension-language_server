@@ -22,7 +22,7 @@ import os
 import sys
 from pyqode.qt.QtCore import Signal
 from libqtopensesame.misc.config import cfg
-from pyqode_extras.widgets import FallbackCodeEdit
+from libqtopensesame.pyqode_extras.widgets import FallbackCodeEdit
 from pyqode.core import modes, panels
 from pyqode.language_server.backend import server, workers
 from pyqode.language_server import modes as lsp_modes

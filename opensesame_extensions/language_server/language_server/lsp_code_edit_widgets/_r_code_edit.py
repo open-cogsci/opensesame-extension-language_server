@@ -18,23 +18,18 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
-import mimetypes
-from lsp_code_edit_widgets._language_server_code_edit import \
+from ._language_server_code_edit import \
     LanguageServerCodeEdit
 
 
-class YAMLCodeEdit(LanguageServerCodeEdit):
-    """https://github.com/redhat-developer/yaml-language-server"""
+class RCodeEdit(LanguageServerCodeEdit):
+    """https://github.com/REditorSupport/languageserver"""
     
-    mimetypes = [
-        'application/yaml',
-        'application/x-yaml',
-        'text/yaml',
-        'text/x-yaml',
-    ]
-    language_server_command = 'yaml-language-server --stdio'
-    language = 'yaml'
+    mimetypes = ['text/x-r', 'text/x-R']
+    language_server_command = 'R --slave -e "languageserver::run()"'
+    language = 'R'
 
-
-mimetypes.add_type('application/yaml', '.yaml', strict=True)
-mimetypes.add_type('application/yaml', '.yml', strict=True)
+    def __init__(self, *args, **kwargs):
+        
+        super().__init__(*args, **kwargs)
+        self._word_separators.remove('.')

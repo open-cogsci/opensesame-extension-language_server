@@ -1,6 +1,6 @@
 # Language-server extension for OpenSesame and Rapunzel
 
-Copyright 2020-2021 Sebastiaan Mathôt (@smathot)
+Copyright 2020-2023 Sebastiaan Mathôt (@smathot)
 
 
 ## About

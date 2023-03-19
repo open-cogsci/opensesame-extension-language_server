@@ -18,22 +18,18 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from libopensesame.py3compat import *
-from lsp_code_edit_widgets._language_server_code_edit import \
+from ._language_server_code_edit import \
     LanguageServerCodeEdit
 
 
-class TypeScriptCodeEdit(LanguageServerCodeEdit):
-    """https://github.com/theia-ide/typescript-language-server"""
+class CSSCodeEdit(LanguageServerCodeEdit):
+    """https://github.com/vscode-langservers/vscode-css-languageserver-bin"""
     
-    mimetypes = [
-        'application/javascript',
-        'application/x-javascript',
-        'application/typescript',
-        'application/x-typescript',
-        'text/javascript',
-        'text/x-javascript',
-        'text/typescript',
-        'text/x-typescript'
-    ]
-    language_server_command = 'typescript-language-server --stdio'
-    language = 'typescript'
+    mimetypes = ['text/css']
+    language_server_command = 'css-languageserver --stdio'
+    language = 'css'
+
+    def __init__(self, *args, **kwargs):
+        
+        super().__init__(*args, **kwargs)
+        self._word_separators.remove('-')
