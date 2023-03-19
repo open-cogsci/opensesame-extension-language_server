@@ -20,7 +20,7 @@ along with OpenSesame.  If not, see <http://www.gnu.org/licenses/>.
 from libopensesame.py3compat import *
 import os
 import sys
-from pyqode.qt.QtCore import Signal
+from qtpy.QtCore import Signal
 from libqtopensesame.misc.config import cfg
 from libqtopensesame.pyqode_extras.widgets import FallbackCodeEdit
 from pyqode.core import modes, panels
