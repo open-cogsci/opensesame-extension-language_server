@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "opensesame-extension-language_server"
-version = "0.2.1"
+version = "0.2.2"
 description = "Adds language-server support to OpenSesame and Rapunzel"
 authors = ["Sebastiaan Mathôt <s.mathot@cogsci.nl>"]
 readme = "readme.md"
@@ -14,6 +14,12 @@ repository = "https://github.com/open-cogsci/opensesame-extension-language_serve
 [tool.poetry.dependencies]
 python = ">= 3.7"
 opensesame-core = ">= 4.0.0a0"
+"pyqode3-language-server" = ">= 0.2.1"
+
+[tool.wheel2deb.dependencies]
+python = ">= 3.7"
+opensesame = ">= 3.99.99"
+"pyqode-language-server" = ">= 0.2.1"
 
 [build-system]
 requires = ["poetry-core"]
